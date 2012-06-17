@@ -81,6 +81,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 @property (nonatomic, strong) NSArray *itemSubviewsCache;
 @property (atomic) NSInteger firstPositionLoaded;
 @property (atomic) NSInteger lastPositionLoaded;
+@property (nonatomic) NSInteger currentPosition;
 
 - (void)commonInit;
 
@@ -123,6 +124,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 
 // Rotation handling
 - (void)receivedWillRotateNotification:(NSNotification *)notification;
+- (void)receivedDidRotateNotification:(NSNotification *)notification;
 
 - (NSArray *)visibleCells;
 
@@ -152,6 +154,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 
 @synthesize firstPositionLoaded = _firstPositionLoaded;
 @synthesize lastPositionLoaded = _lastPositionLoaded;
+@synthesize currentPosition;
 
 //////////////////////////////////////////////////////////////
 #pragma mark Constructors and destructor
@@ -262,6 +265,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedMemoryWarningNotification:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedWillRotateNotification:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedDidRotateNotification:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 }
 
 - (void)dealloc
@@ -406,6 +410,14 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 - (void)receivedWillRotateNotification:(NSNotification *)notification
 {
     _rotationActive = YES;
+    self.currentPosition = [[[self visibleCells] valueForKeyPath:@"@min.integerValue"] integerValue];
+    DLog(@"current position before rotation = %d", self.currentPosition);
+}
+
+- (void)receivedDidRotateNotification:(NSNotification *)notification
+{
+//    [self scrollToObjectAtIndex:self.currentPosition atScrollPosition:GMGridViewScrollPositionNone animated:YES];
+    DLog(@"current position after rotation  = %d", self.currentPosition);
 }
 
 //////////////////////////////////////////////////////////////
@@ -1342,23 +1354,17 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
         CGSize pageSize =  CGSizeMake(self.bounds.size.width  - self.contentInset.left - self.contentInset.right, 
                                            self.bounds.size.height - self.contentInset.top  - self.contentInset.bottom);
         
-        CGFloat pageX = ceilf(point.x / pageSize.width);
+        NSUInteger itemsPerPage = [(id)self.layoutStrategy numberOfItemsPerPage];
+        NSUInteger itemsPerRow = [(id)self.layoutStrategy numberOfItemsPerRow];
+
+        CGFloat pageX = ceilf(self.currentPosition / itemsPerPage);
         CGFloat pageY = ceilf(point.y / pageSize.height);
+        DLog(@"Current position: %d", self.currentPosition);
+        DLog(@"Current page: %d", pageX);
         
         originScroll = CGPointMake(pageX * pageSize.width, 
-                                   pageY *pageSize.height);
+                                   pageY * pageSize.height);
         
-        /*
-        while (originScroll.x + pageSize.width < point.x) 
-        {
-            originScroll.x += pageSize.width;
-        }
-        
-        while (originScroll.y + pageSize.height < point.y) 
-        {
-            originScroll.y += pageSize.height;
-        }
-        */
         targetRect = CGRectMake(originScroll.x, originScroll.y, pageSize.width, pageSize.height);
     }
     else 
