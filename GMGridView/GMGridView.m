@@ -124,6 +124,8 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 // Rotation handling
 - (void)receivedWillRotateNotification:(NSNotification *)notification;
 
+- (NSArray *)visibleCells;
+
 @end
 
 
@@ -355,6 +357,40 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     {
         [self layoutSubviewsWithAnimation:GMGridViewItemAnimationNone];
     }
+}
+
+- (NSArray *)visibleCells
+{
+    NSArray *array = nil;
+    
+    CGRect visibleRect;
+    visibleRect.origin = self.contentOffset;
+    visibleRect.size = self.bounds.size;
+    
+    float theScale = 1.0 / self.zoomScale;
+    visibleRect.origin.x *= theScale;
+    visibleRect.origin.y *= theScale;
+    visibleRect.size.width *= theScale;
+    visibleRect.size.height *= theScale;
+    
+    NSArray *cells = self.itemSubviews;
+    if ([cells count]) {
+        NSInteger position;
+        CGPoint origin;
+        NSMutableArray *visibleCells = [NSMutableArray array];
+        for (GMGridViewCell *cell in cells) {
+            position = [self positionForItemSubview:cell];
+            if (position != GMGV_INVALID_POSITION) {
+                origin = [self.layoutStrategy originForItemAtPosition:position];
+                if (CGRectIntersectsRect(visibleRect, cell.frame)) {
+                    [visibleCells addObject:[NSNumber numberWithInteger:position]];
+                }
+            }
+        }
+        array = [visibleCells sortedArrayUsingSelector:@selector(compare:)];
+    }
+    
+    return array;
 }
 
 //////////////////////////////////////////////////////////////
