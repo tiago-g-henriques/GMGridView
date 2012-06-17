@@ -452,7 +452,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 #pragma mark UIScrollView delegate replacement
 //////////////////////////////////////////////////////////////
 
-- (void)contentOffset:(CGPoint)contentOffset
+- (void)setContentOffset:(CGPoint)contentOffset
 {
     BOOL valueChanged = !CGPointEqualToPoint(contentOffset, self.contentOffset);
     
