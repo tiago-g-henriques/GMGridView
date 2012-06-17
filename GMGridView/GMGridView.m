@@ -512,6 +512,11 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     }
 }
 
+- (CGPoint)contentOffset
+{
+    return [super contentOffset];
+}
+
 
 //////////////////////////////////////////////////////////////
 #pragma mark GestureRecognizer delegate
