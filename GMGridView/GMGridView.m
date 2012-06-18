@@ -411,13 +411,11 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 {
     _rotationActive = YES;
     self.currentPosition = [[[self visibleCells] valueForKeyPath:@"@min.integerValue"] integerValue];
-    DLog(@"current position before rotation = %d", self.currentPosition);
 }
 
 - (void)receivedDidRotateNotification:(NSNotification *)notification
 {
 //    [self scrollToObjectAtIndex:self.currentPosition atScrollPosition:GMGridViewScrollPositionNone animated:YES];
-    DLog(@"current position after rotation  = %d", self.currentPosition);
 }
 
 //////////////////////////////////////////////////////////////
