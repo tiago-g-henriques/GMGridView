@@ -126,8 +126,6 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 - (void)receivedWillRotateNotification:(NSNotification *)notification;
 - (void)receivedDidRotateNotification:(NSNotification *)notification;
 
-- (NSArray *)visibleCells;
-
 @end
 
 
