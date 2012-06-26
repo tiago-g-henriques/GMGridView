@@ -409,7 +409,11 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 - (void)receivedWillRotateNotification:(NSNotification *)notification
 {
     _rotationActive = YES;
-    self.currentPosition = [[[self visibleCells] valueForKeyPath:@"@min.integerValue"] integerValue];
+    NSArray *currentlyVisibleCells = [self visibleCells];
+    NSInteger firstVisiblePosition = [[currentlyVisibleCells valueForKeyPath:@"@min.integerValue"] integerValue];
+    NSInteger lastVisiblePosition = [[currentlyVisibleCells valueForKeyPath:@"@max.integerValue"] integerValue];
+    NSInteger numberOfVisibleCells = lastVisiblePosition - firstVisiblePosition;
+    self.currentPosition = firstVisiblePosition + numberOfVisibleCells/2;
 }
 
 - (void)receivedDidRotateNotification:(NSNotification *)notification
