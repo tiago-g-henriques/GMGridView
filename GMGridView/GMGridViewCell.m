@@ -57,6 +57,7 @@
 @synthesize deleteButtonIcon = _deleteButtonIcon;
 @synthesize deleteButtonOffset;
 @synthesize reuseIdentifier;
+@synthesize operation;
 
 //////////////////////////////////////////////////////////////
 #pragma mark Constructors
@@ -253,6 +254,7 @@
 
 - (void)prepareForReuse
 {
+    [self.operation cancel];
     self.fullSize = CGSizeZero;
     self.fullSizeView = nil;
     self.editing = NO;

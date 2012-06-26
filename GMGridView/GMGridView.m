@@ -1534,7 +1534,6 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     
     [self loadRequiredItems];
     
-    [self setSubviewsCacheAsInvalid];
     [self setNeedsLayout];
 }
 
