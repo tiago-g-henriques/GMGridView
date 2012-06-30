@@ -449,7 +449,11 @@
 {
     NSUInteger page = [self pageForItemAtIndex:position];
     
-    position %= self.numberOfItemsPerPage;
+    if (self.numberOfItemsPerPage > 0) {
+        position %= self.numberOfItemsPerPage;
+    } else {
+        position = 0;
+    }
         
     NSUInteger row = [self rowForItemAtPosition:position];
     NSUInteger column = [self columnForItemAtPosition:position];
