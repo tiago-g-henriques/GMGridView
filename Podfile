@@ -1,3 +1,3 @@
 platform :ios
 
-pod 'AFNetworking'
+pod 'AFNetworking', '= 0.7.0'
