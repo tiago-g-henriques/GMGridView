@@ -1365,8 +1365,8 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 
         CGFloat pageX = ceilf(self.currentPosition / itemsPerPage);
         CGFloat pageY = ceilf(point.y / pageSize.height);
-        DLog(@"Current position: %d", self.currentPosition);
-        DLog(@"Current page: %d", pageX);
+        NSLog(@"Current position: %d", self.currentPosition);
+        NSLog(@"Current page: %d", pageX);
         
         originScroll = CGPointMake(pageX * pageSize.width, 
                                    pageY * pageSize.height);
